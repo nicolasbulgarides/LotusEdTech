@@ -1,0 +1,1678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="TactileGrid by Lotus Educational Technologies PBC — a low-cost reconfigurable tactile display that lets blind people play games, learn, and compete alongside sighted players." />
+  <title>TactileGrid | Lotus Educational Technologies PBC</title>
+
+  <style>
+    /* ─── Reset & Base ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --purple-deep:   #2D1B6B;
+      --purple-mid:    #4A2BA8;
+      --purple-bright: #6B3FD4;
+      --purple-light:  #9B72EF;
+      --purple-pale:   #EDE8FB;
+      --gold:          #F5C842;
+      --gold-dark:     #C9A020;
+      --gold-light:    #FDE68A;
+      --white:         #FFFFFF;
+      --off-white:     #F9F7FF;
+      --text-dark:     #1A0F3C;
+      --text-mid:      #3D2B7A;
+      --text-light:    #7B68B0;
+      --radius-sm:     8px;
+      --radius-md:     16px;
+      --radius-lg:     28px;
+      --shadow-sm:     0 2px 8px rgba(45,27,107,0.10);
+      --shadow-md:     0 8px 32px rgba(45,27,107,0.18);
+      --shadow-lg:     0 20px 60px rgba(45,27,107,0.25);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--off-white);
+      color: var(--text-dark);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ─── Utility ──────────────────────────────────────────────── */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .section-label {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold-dark);
+      background: rgba(245,200,66,0.15);
+      border: 1px solid rgba(245,200,66,0.4);
+      padding: 4px 14px;
+      border-radius: 999px;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      line-height: 1.2;
+      color: var(--text-dark);
+      margin-bottom: 16px;
+    }
+
+    .section-title span {
+      color: var(--purple-bright);
+    }
+
+    .section-body {
+      font-size: 1.05rem;
+      color: var(--text-light);
+      max-width: 640px;
+      line-height: 1.75;
+    }
+
+    /* ─── Nav ──────────────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(45,27,107,0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(245,200,66,0.15);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .nav-logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      box-shadow: 0 2px 8px rgba(245,200,66,0.4);
+    }
+
+    .nav-logo-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+    }
+
+    .nav-logo-primary {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: 0.02em;
+    }
+
+    .nav-logo-secondary {
+      font-size: 0.65rem;
+      font-weight: 500;
+      color: var(--gold-light);
+      letter-spacing: 0.06em;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: rgba(255,255,255,0.75);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--gold-light); }
+
+    .nav-cta {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-dark) !important;
+      background: var(--gold);
+      padding: 8px 20px;
+      border-radius: 999px;
+      transition: background 0.2s, transform 0.15s !important;
+    }
+
+    .nav-cta:hover {
+      background: var(--gold-light) !important;
+      color: var(--text-dark) !important;
+      transform: translateY(-1px);
+    }
+
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      background: none;
+      border: none;
+    }
+
+    .nav-hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--white);
+      border-radius: 2px;
+      transition: all 0.3s;
+    }
+
+    /* ─── Hero ─────────────────────────────────────────────────── */
+    #hero {
+      min-height: 100vh;
+      background: linear-gradient(145deg, var(--purple-deep) 0%, var(--purple-mid) 55%, #3A1E8A 100%);
+      display: flex;
+      align-items: center;
+      padding-top: 64px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Decorative grid pattern */
+    #hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(245,200,66,0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(245,200,66,0.07) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+    }
+
+    /* Glow orbs */
+    #hero::after {
+      content: '';
+      position: absolute;
+      top: -120px;
+      right: -120px;
+      width: 520px;
+      height: 520px;
+      background: radial-gradient(circle, rgba(107,63,212,0.5) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-glow-2 {
+      position: absolute;
+      bottom: -80px;
+      left: -80px;
+      width: 380px;
+      height: 380px;
+      background: radial-gradient(circle, rgba(245,200,66,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      width: 100%;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(245,200,66,0.15);
+      border: 1px solid rgba(245,200,66,0.35);
+      padding: 6px 16px 6px 8px;
+      border-radius: 999px;
+      margin-bottom: 24px;
+    }
+
+    .hero-badge-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--gold);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(0.85); }
+    }
+
+    .hero-badge-text {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+    }
+
+    .hero-title {
+      font-size: clamp(2.4rem, 6vw, 4rem);
+      font-weight: 900;
+      line-height: 1.1;
+      color: var(--white);
+      margin-bottom: 20px;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-title .accent {
+      background: linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.7;
+      margin-bottom: 36px;
+      max-width: 480px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+      color: var(--text-dark);
+      font-weight: 800;
+      font-size: 0.95rem;
+      padding: 14px 28px;
+      border-radius: 999px;
+      text-decoration: none;
+      box-shadow: 0 4px 20px rgba(245,200,66,0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(245,200,66,0.55);
+    }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      color: var(--white);
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 13px 28px;
+      border-radius: 999px;
+      border: 1.5px solid rgba(255,255,255,0.35);
+      text-decoration: none;
+      transition: border-color 0.2s, background 0.2s, transform 0.2s;
+    }
+
+    .btn-outline:hover {
+      border-color: rgba(255,255,255,0.7);
+      background: rgba(255,255,255,0.08);
+      transform: translateY(-2px);
+    }
+
+    /* Hero visual — tactile grid illustration */
+    .hero-visual {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .tactile-device {
+      width: min(380px, 100%);
+      aspect-ratio: 1;
+      background: rgba(255,255,255,0.06);
+      border: 1.5px solid rgba(255,255,255,0.12);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255,255,255,0.1);
+      backdrop-filter: blur(4px);
+      position: relative;
+    }
+
+    .device-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 18px;
+      text-align: center;
+    }
+
+    .tactile-grid {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 6px;
+    }
+
+    .t-cell {
+      aspect-ratio: 1;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: background 0.3s, border-color 0.3s, transform 0.3s;
+      position: relative;
+    }
+
+    .t-cell.raised {
+      background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 100%);
+      border-color: var(--gold-dark);
+      box-shadow: 0 3px 0 rgba(0,0,0,0.3), 0 0 8px rgba(245,200,66,0.3);
+      transform: translateY(-2px);
+    }
+
+    .t-cell.active {
+      background: linear-gradient(135deg, var(--purple-light) 0%, var(--purple-bright) 100%);
+      border-color: var(--purple-bright);
+      box-shadow: 0 3px 0 rgba(0,0,0,0.3), 0 0 8px rgba(107,63,212,0.4);
+      transform: translateY(-2px);
+    }
+
+    .device-footer {
+      position: absolute;
+      bottom: 20px;
+      left: 28px;
+      right: 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .device-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .device-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+    }
+
+    .device-dot.on { background: var(--gold); }
+
+    .device-chip {
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+    }
+
+    /* ─── Stats bar ────────────────────────────────────────────── */
+    .stats-bar {
+      background: var(--white);
+      border-bottom: 1px solid rgba(45,27,107,0.07);
+      padding: 28px 0;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .stats-inner {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      flex: 1;
+      min-width: 160px;
+      text-align: center;
+      padding: 12px 24px;
+      border-right: 1px solid rgba(45,27,107,0.08);
+    }
+
+    .stat-item:last-child { border-right: none; }
+
+    .stat-number {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--purple-bright);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .stat-number .gold { color: var(--gold-dark); }
+
+    .stat-desc {
+      font-size: 0.8rem;
+      color: var(--text-light);
+      font-weight: 500;
+    }
+
+    /* ─── What is TactileGrid ──────────────────────────────────── */
+    #what {
+      padding: 100px 0;
+      background: var(--off-white);
+    }
+
+    .what-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 72px;
+      align-items: center;
+    }
+
+    .what-features {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-top: 32px;
+    }
+
+    .feature-card {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      background: var(--white);
+      border: 1px solid rgba(45,27,107,0.08);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+
+    .feature-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .feature-icon {
+      flex-shrink: 0;
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, var(--purple-pale) 0%, rgba(107,63,212,0.12) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    .feature-content h3 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 4px;
+    }
+
+    .feature-content p {
+      font-size: 0.875rem;
+      color: var(--text-light);
+      line-height: 1.6;
+    }
+
+    /* Visual panel */
+    .what-visual {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .visual-panel {
+      background: linear-gradient(135deg, var(--purple-deep) 0%, var(--purple-mid) 100%);
+      border-radius: var(--radius-lg);
+      padding: 36px;
+      color: white;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+
+    .visual-panel::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+
+    .visual-panel-content { position: relative; z-index: 1; }
+
+    .visual-panel-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+
+    .use-case-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .use-case-list li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.85);
+    }
+
+    .use-case-list li::before {
+      content: '';
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: rgba(245,200,66,0.2);
+      border: 1.5px solid var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath d='M2 5l2.5 2.5L8 3' stroke='%23F5C842' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    .info-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(245,200,66,0.12);
+      border: 1px solid rgba(245,200,66,0.3);
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 0.82rem;
+      color: var(--gold-light);
+      font-weight: 500;
+    }
+
+    /* ─── Problem section ──────────────────────────────────────── */
+    #problem {
+      padding: 100px 0;
+      background: linear-gradient(180deg, var(--purple-pale) 0%, var(--white) 100%);
+    }
+
+    .problem-header { text-align: center; margin-bottom: 60px; }
+
+    .problem-header .section-body {
+      margin: 0 auto;
+    }
+
+    .problem-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-bottom: 56px;
+    }
+
+    .problem-card {
+      background: var(--white);
+      border: 1px solid rgba(45,27,107,0.08);
+      border-radius: var(--radius-md);
+      padding: 28px 24px;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+
+    .problem-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-3px);
+    }
+
+    .problem-icon {
+      font-size: 2rem;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .problem-card h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+    }
+
+    .problem-card p {
+      font-size: 0.875rem;
+      color: var(--text-light);
+      line-height: 1.65;
+    }
+
+    .solution-banner {
+      background: linear-gradient(135deg, var(--purple-deep) 0%, var(--purple-mid) 100%);
+      border-radius: var(--radius-lg);
+      padding: 48px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 40px;
+      align-items: center;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .solution-banner::before {
+      content: '';
+      position: absolute;
+      top: -60px;
+      right: -60px;
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(245,200,66,0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .solution-text { position: relative; z-index: 1; }
+
+    .solution-text h3 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 12px;
+    }
+
+    .solution-text p {
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.7;
+      max-width: 520px;
+    }
+
+    .solution-text .highlight { color: var(--gold-light); font-weight: 600; }
+
+    .solution-cta { position: relative; z-index: 1; flex-shrink: 0; }
+
+    /* ─── Coming Soon ──────────────────────────────────────────── */
+    #coming-soon {
+      padding: 100px 0;
+      background: var(--off-white);
+    }
+
+    .coming-inner { text-align: center; }
+
+    .coming-inner .section-body { margin: 0 auto 48px; }
+
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      max-width: 600px;
+      margin: 0 auto 56px;
+      position: relative;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 24px;
+      top: 24px;
+      bottom: 24px;
+      width: 2px;
+      background: linear-gradient(180deg, var(--purple-bright) 0%, var(--gold) 100%);
+      opacity: 0.3;
+    }
+
+    .timeline-item {
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+      padding: 0 0 32px 0;
+      text-align: left;
+    }
+
+    .timeline-item:last-child { padding-bottom: 0; }
+
+    .timeline-dot {
+      flex-shrink: 0;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .timeline-dot.done {
+      background: linear-gradient(135deg, var(--purple-bright) 0%, var(--purple-mid) 100%);
+      box-shadow: 0 0 0 4px rgba(107,63,212,0.15);
+    }
+
+    .timeline-dot.active {
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+      box-shadow: 0 0 0 4px rgba(245,200,66,0.2);
+      animation: glow 2s ease-in-out infinite;
+    }
+
+    @keyframes glow {
+      0%, 100% { box-shadow: 0 0 0 4px rgba(245,200,66,0.2); }
+      50% { box-shadow: 0 0 0 8px rgba(245,200,66,0.35), 0 0 20px rgba(245,200,66,0.2); }
+    }
+
+    .timeline-dot.upcoming {
+      background: var(--white);
+      border: 2px dashed rgba(45,27,107,0.2);
+    }
+
+    .timeline-content {
+      padding-top: 8px;
+    }
+
+    .timeline-content .phase {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--purple-bright);
+      margin-bottom: 4px;
+    }
+
+    .timeline-content h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 4px;
+    }
+
+    .timeline-content p {
+      font-size: 0.875rem;
+      color: var(--text-light);
+      line-height: 1.6;
+    }
+
+    .coming-cta-box {
+      background: linear-gradient(135deg, var(--purple-deep) 0%, var(--purple-mid) 100%);
+      border-radius: var(--radius-lg);
+      padding: 48px;
+      max-width: 600px;
+      margin: 0 auto;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .coming-cta-box::before {
+      content: '';
+      position: absolute;
+      bottom: -40px;
+      right: -40px;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(245,200,66,0.12) 0%, transparent 70%);
+    }
+
+    .coming-cta-box h3 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 12px;
+      position: relative;
+    }
+
+    .coming-cta-box p {
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.75);
+      margin-bottom: 28px;
+      position: relative;
+    }
+
+    .email-form {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      position: relative;
+    }
+
+    .email-form input {
+      flex: 1;
+      min-width: 200px;
+      padding: 13px 20px;
+      border-radius: 999px;
+      border: 1.5px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.1);
+      color: var(--white);
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .email-form input::placeholder { color: rgba(255,255,255,0.45); }
+    .email-form input:focus { border-color: var(--gold); }
+
+    .email-form button {
+      padding: 13px 28px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+      color: var(--text-dark);
+      font-weight: 800;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 16px rgba(245,200,66,0.4);
+    }
+
+    .email-form button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 24px rgba(245,200,66,0.55);
+    }
+
+    /* ─── Contact ──────────────────────────────────────────────── */
+    #contact {
+      padding: 100px 0;
+      background: var(--white);
+    }
+
+    .contact-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 72px;
+      align-items: start;
+    }
+
+    .contact-info h2 {
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 800;
+      color: var(--text-dark);
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    .contact-info h2 span { color: var(--purple-bright); }
+
+    .contact-info p {
+      font-size: 1rem;
+      color: var(--text-light);
+      line-height: 1.75;
+      margin-bottom: 32px;
+    }
+
+    .contact-links {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .contact-link-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+      color: var(--text-dark);
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+    }
+
+    .contact-link-item:hover { color: var(--purple-bright); }
+
+    .contact-link-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-sm);
+      background: var(--purple-pale);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      transition: background 0.2s;
+      flex-shrink: 0;
+    }
+
+    .contact-link-item:hover .contact-link-icon {
+      background: rgba(107,63,212,0.15);
+    }
+
+    .contact-form-box {
+      background: var(--off-white);
+      border: 1px solid rgba(45,27,107,0.08);
+      border-radius: var(--radius-lg);
+      padding: 36px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .contact-form-box h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 24px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-mid);
+      margin-bottom: 6px;
+      letter-spacing: 0.02em;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1.5px solid rgba(45,27,107,0.12);
+      border-radius: var(--radius-sm);
+      background: var(--white);
+      font-size: 0.9rem;
+      color: var(--text-dark);
+      outline: none;
+      font-family: inherit;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      border-color: var(--purple-bright);
+      box-shadow: 0 0 0 3px rgba(107,63,212,0.1);
+    }
+
+    .form-group textarea { resize: vertical; min-height: 110px; }
+
+    .form-submit {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, var(--purple-bright) 0%, var(--purple-mid) 100%);
+      color: var(--white);
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 16px rgba(107,63,212,0.35);
+    }
+
+    .form-submit:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(107,63,212,0.45);
+    }
+
+    /* ─── Footer ───────────────────────────────────────────────── */
+    footer {
+      background: var(--purple-deep);
+      padding: 48px 0 32px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 40px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+
+    .footer-brand .nav-logo-primary { font-size: 1.05rem; }
+
+    .footer-brand p {
+      font-size: 0.825rem;
+      color: rgba(255,255,255,0.45);
+      margin-top: 10px;
+      max-width: 240px;
+      line-height: 1.6;
+    }
+
+    .footer-links-group h4 {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 14px;
+    }
+
+    .footer-links-group ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-links-group ul a {
+      font-size: 0.875rem;
+      color: rgba(255,255,255,0.55);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links-group ul a:hover { color: var(--gold-light); }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-bottom p {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.35);
+    }
+
+    .footer-bottom p a {
+      color: rgba(255,255,255,0.45);
+      text-decoration: none;
+    }
+
+    .pbc-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(245,200,66,0.1);
+      border: 1px solid rgba(245,200,66,0.25);
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+    }
+
+    /* ─── Responsive ───────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .hero-inner,
+      .what-inner,
+      .contact-inner { grid-template-columns: 1fr; gap: 48px; }
+
+      .hero-visual { order: -1; }
+
+      .tactile-device { width: min(280px, 80%); }
+
+      .problem-cards { grid-template-columns: 1fr; }
+
+      .solution-banner {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .solution-cta { margin: 0 auto; }
+
+      .what-inner .section-label,
+      .what-inner .section-title,
+      .what-inner .section-body { text-align: center; }
+
+      .what-features { align-items: stretch; }
+    }
+
+    @media (max-width: 680px) {
+      .nav-links { display: none; }
+      .nav-hamburger { display: flex; }
+
+      .nav-links.open {
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 64px;
+        left: 0;
+        right: 0;
+        background: var(--purple-deep);
+        padding: 24px;
+        gap: 20px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+      }
+
+      .stat-item { min-width: 50%; border-bottom: 1px solid rgba(45,27,107,0.08); }
+      .stat-item:nth-last-child(-n+2) { border-bottom: none; }
+      .stat-item:nth-child(even) { border-right: none; }
+
+      .coming-cta-box { padding: 32px 24px; }
+      .solution-banner { padding: 32px 24px; }
+
+      .hero-actions { flex-direction: column; }
+      .btn-primary, .btn-outline { text-align: center; justify-content: center; }
+
+      .footer-inner { flex-direction: column; }
+    }
+
+    /* ─── Scroll animations ────────────────────────────────────── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .fade-up:nth-child(2) { transition-delay: 0.1s; }
+    .fade-up:nth-child(3) { transition-delay: 0.2s; }
+    .fade-up:nth-child(4) { transition-delay: 0.3s; }
+  </style>
+</head>
+
+<body>
+
+  <!-- ─── Navigation ─────────────────────────────────── -->
+  <nav aria-label="Main navigation">
+    <div class="container nav-inner">
+      <a href="#hero" class="nav-logo" aria-label="Lotus Educational Technologies — Home">
+        <div class="nav-logo-icon" aria-hidden="true">&#x1F337;</div>
+        <div class="nav-logo-text">
+          <span class="nav-logo-primary">Lotus EdTech</span>
+          <span class="nav-logo-secondary">Public Benefit Corp</span>
+        </div>
+      </a>
+
+      <ul class="nav-links" id="nav-links" role="list">
+        <li><a href="#what">What It Is</a></li>
+        <li><a href="#problem">The Problem</a></li>
+        <li><a href="#coming-soon">Coming Soon</a></li>
+        <li><a href="#contact" class="nav-cta">Contact Us</a></li>
+      </ul>
+
+      <button class="nav-hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ─── Hero ────────────────────────────────────────── -->
+  <section id="hero" aria-label="Hero">
+    <div class="hero-glow-2" aria-hidden="true"></div>
+    <div class="container">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <div class="hero-badge" aria-label="Now in development">
+            <div class="hero-badge-dot" aria-hidden="true"></div>
+            <span class="hero-badge-text">Now in Development</span>
+          </div>
+
+          <h1 class="hero-title">
+            Play. Learn. Compete.<br>
+            <span class="accent">Feel the Game.</span>
+          </h1>
+
+          <p class="hero-sub">
+            TactileGrid is a low-cost, reconfigurable tactile display that lets blind and visually impaired people play games, explore spatial information, and compete alongside sighted players.
+          </p>
+
+          <div class="hero-actions">
+            <a href="#what" class="btn-primary">
+              Discover TactileGrid
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+            <a href="#contact" class="btn-outline">
+              Get in Touch
+            </a>
+          </div>
+        </div>
+
+        <!-- Tactile device illustration -->
+        <div class="hero-visual" aria-hidden="true">
+          <div class="tactile-device">
+            <div class="device-label">TactileGrid — Prototype A</div>
+            <div class="tactile-grid" id="tactile-grid"><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div><div class="t-cell"></div></div>
+            <div class="device-footer">
+              <div class="device-dots">
+                <div class="device-dot on"></div>
+                <div class="device-dot on"></div>
+                <div class="device-dot"></div>
+              </div>
+              <span class="device-chip">Lotus EdTech</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Stats Bar ────────────────────────────────────── -->
+  <div class="stats-bar" role="region" aria-label="Key statistics">
+    <div class="container">
+      <div class="stats-inner">
+        <div class="stat-item">
+          <div class="stat-number">295<span class="gold">M+</span></div>
+          <div class="stat-desc">People with vision impairment worldwide</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number"><span class="gold">$</span>Low</div>
+          <div class="stat-desc">Target cost vs. existing $5,000–$15,000 devices</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">12</div>
+          <div class="stat-desc">Distinct textures per ring cell</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number"><span class="gold">∞</span></div>
+          <div class="stat-desc">Reconfigurable layouts per use case</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── What is TactileGrid ─────────────────────────── -->
+  <section id="what" aria-labelledby="what-title">
+    <div class="container">
+      <div class="what-inner">
+        <div class="what-text">
+          <span class="section-label">What Is TactileGrid?</span>
+          <h2 class="section-title" id="what-title">
+            A tactile display that<br>
+            <span>adapts to any task</span>
+          </h2>
+          <p class="section-body">
+            TactileGrid is a board with a grid of rotating 12-sided rings, each carrying 12 unique tactile textures. A smartphone sends a layout via Bluetooth, motors rotate the rings, and the surface reconfigures in about one second — creating a tactile display for games, education, maps, and more at a fraction of the cost of existing devices.
+          </p>
+
+          <div class="what-features">
+            <div class="feature-card fade-up">
+              <div class="feature-icon" aria-hidden="true">&#x1F3AE;</div>
+              <div class="feature-content">
+                <h3>Gaming & Recreation</h3>
+                <p>Represent chess, checkers, puzzles, and custom game boards — play head-to-head with sighted friends.</p>
+              </div>
+            </div>
+            <div class="feature-card fade-up">
+              <div class="feature-icon" aria-hidden="true">&#x1F4DA;</div>
+              <div class="feature-content">
+                <h3>Education & STEM</h3>
+                <p>Feel graphs, maps, and geometric diagrams. TactileGrid makes visual learning tangible.</p>
+              </div>
+            </div>
+            <div class="feature-card fade-up">
+              <div class="feature-icon" aria-hidden="true">&#x2764;</div>
+              <div class="feature-content">
+                <h3>Accessible by Design</h3>
+                <p>Built as a Public Benefit Corporation — our mission is affordable, accessible technology for the blind and visually impaired community.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="what-visual">
+          <div class="visual-panel">
+            <div class="visual-panel-content">
+              <div class="visual-panel-title">Supported Use Cases</div>
+              <ul class="use-case-list">
+                <li>Board games with sighted players</li>
+                <li>Interactive maps &amp; navigation aids</li>
+                <li>STEM diagrams for students</li>
+                <li>Puzzle games &amp; spatial challenges</li>
+                <li>Music notation &amp; rhythm patterns</li>
+                <li>Custom assistive applications</li>
+              </ul>
+            </div>
+          </div>
+          <div class="info-pill">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="6" stroke="#FDE68A" stroke-width="1.5"/><path d="M7 6v4M7 4.5v.5" stroke="#FDE68A" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Open standard &mdash; designed to work with any software platform
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── The Problem ──────────────────────────────────── -->
+  <section id="problem" aria-labelledby="problem-title">
+    <div class="container">
+      <div class="problem-header">
+        <span class="section-label">The Problem We're Solving</span>
+        <h2 class="section-title" id="problem-title">
+          Blind people are locked out<br>
+          of <span>visual experiences</span>
+        </h2>
+        <p class="section-body">
+          The assistive tech industry has made great progress with text access, but spatial and gaming experiences remain largely out of reach.
+        </p>
+      </div>
+
+      <div class="problem-cards">
+        <div class="problem-card fade-up">
+          <span class="problem-icon" aria-hidden="true">&#x1F4B8;</span>
+          <h3>Prohibitive Cost</h3>
+          <p>Existing tactile displays cost $5,000–$15,000+. For most users worldwide — especially in lower-income countries — this places them completely out of reach.</p>
+        </div>
+        <div class="problem-card fade-up">
+          <span class="problem-icon" aria-hidden="true">&#x1F9F1;</span>
+          <h3>Rigid &amp; Inflexible</h3>
+          <p>Current tactile displays are designed primarily for reading text. They can't easily render game boards, maps, or spatial layouts — leaving a gap for spatial reasoning, play, and interactive learning.</p>
+        </div>
+        <div class="problem-card fade-up">
+          <span class="problem-icon" aria-hidden="true">&#x1F6AB;</span>
+          <h3>No Shared Play</h3>
+          <p>Blind individuals are routinely excluded from tabletop games, STEM classrooms, and competitive activities — siloed from sighted peers by inaccessible formats.</p>
+        </div>
+      </div>
+
+      <div class="solution-banner">
+        <div class="solution-text">
+          <h3>TactileGrid offers a new approach.</h3>
+          <p>
+            By using low-cost rotating rings and standard stepper motors, we're building a device that costs <span class="highlight">a fraction of existing displays</span>, supports <span class="highlight">games and spatial content</span>, and puts blind people at the same table — literally — as everyone else.
+          </p>
+        </div>
+        <div class="solution-cta">
+          <a href="mailto:nicolasbulgarides@gmail.com" class="btn-primary">
+            Get In Touch
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Coming Soon ──────────────────────────────────── -->
+  <section id="coming-soon" aria-labelledby="coming-title">
+    <div class="container">
+      <div class="coming-inner">
+        <span class="section-label">Roadmap</span>
+        <h2 class="section-title" id="coming-title">
+          Coming <span>Soon</span>
+        </h2>
+        <p class="section-body">
+          We're building in public. Here's where we are and where we're headed — sign up to follow along and be the first to know when TactileGrid is ready.
+        </p>
+
+        <div class="timeline" role="list" aria-label="Development roadmap">
+          <div class="timeline-item" role="listitem">
+            <div class="timeline-dot done" aria-label="Completed">&#x2713;</div>
+            <div class="timeline-content">
+              <div class="phase">Phase 1 — Complete</div>
+              <h3>Research &amp; Concept Validation</h3>
+              <p>Market research and feasibility study on tactile ring design and motor technology.</p>
+            </div>
+          </div>
+          <div class="timeline-item" role="listitem">
+            <div class="timeline-dot active" aria-label="In progress">&#x25CF;</div>
+            <div class="timeline-content">
+              <div class="phase">Phase 2 — In Progress</div>
+              <h3>Prototype Development</h3>
+              <p>Engineering the first 4×4 motorized prototype. Iterating on ring design, motor control, and companion app.</p>
+            </div>
+          </div>
+          <div class="timeline-item" role="listitem">
+            <div class="timeline-dot upcoming" aria-label="Upcoming">3</div>
+            <div class="timeline-content">
+              <div class="phase">Phase 3 — Upcoming</div>
+              <h3>User Testing &amp; Iteration</h3>
+              <p>User interviews with blind communities, partnering with schools for the blind and disability advocacy groups to test with real users and refine the experience.</p>
+            </div>
+          </div>
+          <div class="timeline-item" role="listitem">
+            <div class="timeline-dot upcoming" aria-label="Upcoming">4</div>
+            <div class="timeline-content">
+              <div class="phase">Phase 4 — Upcoming</div>
+              <h3>Launch &amp; Distribution</h3>
+              <p>Production manufacturing, school pilot programs, and direct-to-consumer sales. Targeting education institutions and accessibility organizations.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="coming-cta-box">
+          <h3>Interested? Get in touch.</h3>
+          <p>We're looking for schools, educators, and partners to help test and refine TactileGrid.</p>
+          <a href="mailto:nicolasbulgarides@gmail.com" class="btn-primary" style="display:inline-flex;margin-top:12px;">
+            Email Us
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Contact ──────────────────────────────────────── -->
+  <section id="contact" aria-labelledby="contact-title">
+    <div class="container">
+      <div class="contact-inner">
+        <div class="contact-info">
+          <span class="section-label">Contact</span>
+          <h2 class="contact-info h2" id="contact-title">
+            Let's build something<br>
+            <span>meaningful together</span>
+          </h2>
+          <p>
+            Whether you're a potential partner, educator, researcher, investor, or someone who wants to see TactileGrid succeed — we'd love to hear from you.
+          </p>
+
+          <div class="contact-links">
+            <a href="mailto:nicolasbulgarides@gmail.com" class="contact-link-item">
+              <div class="contact-link-icon" aria-hidden="true">&#x2709;</div>
+              nicolasbulgarides@gmail.com
+            </a>
+          </div>
+          <p style="color:var(--text-light);font-size:0.9rem;margin-top:16px;">Nicolas Bulgarides &mdash; Founder, Lotus Educational Technologies PBC</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Footer ───────────────────────────────────────── -->
+  <footer role="contentinfo">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <div class="nav-logo">
+            <div class="nav-logo-icon" aria-hidden="true">&#x1F337;</div>
+            <div class="nav-logo-text">
+              <span class="nav-logo-primary">Lotus Educational Technologies</span>
+              <span class="nav-logo-secondary">Public Benefit Corporation</span>
+            </div>
+          </div>
+          <p>Making tactile technology affordable, flexible, and joyful for blind and visually impaired people everywhere.</p>
+          <div style="margin-top:14px;">
+            <span class="pbc-badge">&#x2B50; Public Benefit Corp</span>
+          </div>
+        </div>
+
+        <div class="footer-links-group">
+          <h4>Navigate</h4>
+          <ul>
+            <li><a href="#what">What Is TactileGrid</a></li>
+            <li><a href="#problem">The Problem</a></li>
+            <li><a href="#coming-soon">Roadmap</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-links-group">
+          <h4>Contact</h4>
+          <ul>
+            <li><a href="mailto:nicolasbulgarides@gmail.com">nicolasbulgarides@gmail.com</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 Lotus Educational Technologies PBC. All rights reserved.</p>
+        <p>Built with purpose in Raleigh, NC</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ─── Scripts ───────────────────────────────────────── -->
+  <script>
+    window.addEventListener('load', function () {
+
+      // ── Tactile grid animation ────────────────────────────────
+      var cells = document.querySelectorAll('#tactile-grid .t-cell');
+      var label = document.querySelector('.device-label');
+
+      // Patterns: flat array of 80 values. 1=gold raised, 2=purple active, 0=off
+      // Grid is 8 rows x 10 cols, index = row*10 + col
+      function grid(fn) {
+        var a = new Array(80);
+        for (var i = 0; i < 80; i++) a[i] = 0;
+        fn(function dot(r, c, v) {
+          var idx = r * 10 + c;
+          if (idx >= 0 && idx < 80 && r >= 0 && r < 8 && c >= 0 && c < 10) a[idx] = v;
+        });
+        return a;
+      }
+
+      var boards = [
+        // 1 — Chess board (8x8 checkerboard in cols 1-8)
+        { name: 'Chess Board', cells: grid(function(d) {
+          for (var r = 0; r < 8; r++)
+            for (var c = 1; c <= 8; c++)
+              if ((r + c) % 2 === 0) d(r, c, 1);
+        })},
+
+        // 2 — Tic-Tac-Toe: grid lines + X and O pieces
+        { name: 'Tic-Tac-Toe', cells: grid(function(d) {
+          var r, c;
+          for (c = 0; c < 10; c++) { d(2, c, 2); d(5, c, 2); }
+          for (r = 0; r < 8; r++)  { d(r, 3, 2); d(r, 6, 2); }
+          // X pieces
+          d(0,0,1); d(0,2,1); d(1,1,1);
+          d(3,0,1); d(3,2,1); d(4,1,1);
+          d(6,7,1); d(6,9,1); d(7,8,1);
+          // O pieces
+          d(0,7,2); d(0,8,2); d(0,9,2); d(1,7,2); d(1,9,2);
+          d(3,4,2); d(3,5,2); d(4,4,2); d(4,5,2);
+          d(6,4,2); d(6,5,2); d(7,4,2); d(7,5,2);
+        })},
+
+        // 3 — Bar chart with axes
+        { name: 'Bar Chart', cells: grid(function(d) {
+          var r, c, bh, bc;
+          for (r = 0; r < 8; r++) d(r, 0, 1);
+          for (c = 0; c < 10; c++) d(7, c, 1);
+          var bars = [[2,3],[3,6],[5,7],[6,4],[8,5]];
+          for (var i = 0; i < bars.length; i++) {
+            bc = bars[i][0]; bh = bars[i][1];
+            for (r = 7 - bh; r < 7; r++) d(r, bc, 1);
+          }
+        })},
+
+        // 4 — Maze (walls = raised)
+        { name: 'Maze', cells: grid(function(d) {
+          var r, c;
+          for (c = 0; c < 10; c++) { if (c !== 1) d(0, c, 1); if (c !== 8) d(7, c, 1); }
+          for (r = 0; r < 8; r++) { d(r, 0, 1); d(r, 9, 1); }
+          for (r = 1; r <= 3; r++) d(r, 4, 1);
+          for (c = 4; c <= 7; c++) d(3, c, 1);
+          for (r = 3; r <= 6; r++) d(r, 7, 1);
+          d(1,6,1); d(1,7,1);
+          d(2,1,1); d(2,2,1); d(2,3,1);
+          d(4,2,1); d(5,2,1); d(5,3,1); d(5,4,1); d(6,2,1);
+        })},
+
+        // 5 — Right-pointing arrow
+        { name: 'Navigation', cells: grid(function(d) {
+          var c;
+          for (c = 0; c <= 7; c++) { d(3, c, 2); d(4, c, 2); }
+          d(1,7,2); d(2,7,2); d(2,8,2);
+          d(3,9,2); d(4,9,2);
+          d(5,7,2); d(5,8,2); d(6,7,2);
+        })},
+
+        // 6 — Connect Four board
+        { name: 'Connect Four', cells: grid(function(d) {
+          var r, c;
+          for (c = 0; c < 10; c++) { d(0, c, 1); d(7, c, 1); }
+          for (r = 0; r < 8; r++)  { d(r, 0, 1); d(r, 9, 1); }
+          for (c = 1; c <= 8; c++) d(6, c, 1);
+          d(5,1,2); d(5,3,2); d(5,5,2); d(5,7,2);
+          d(4,2,1); d(4,4,1); d(4,6,1); d(4,8,1);
+          d(3,3,2); d(3,5,2);
+          d(2,4,1);
+        })},
+      ];
+
+      var boardIdx = 0;
+
+      function show() {
+        var b = boards[boardIdx % boards.length];
+        if (label) label.textContent = b.name;
+        for (var i = 0; i < cells.length; i++) {
+          var v = b.cells[i];
+          cells[i].className = v === 1 ? 't-cell raised' : v === 2 ? 't-cell active' : 't-cell';
+        }
+      }
+
+      if (cells.length) {
+        show();
+        setInterval(function () { boardIdx++; show(); }, 2500);
+      }
+
+      // ── Mobile nav toggle ───────────────────────────────────────
+      var navBtn   = document.getElementById('hamburger');
+      var navLinks = document.getElementById('nav-links');
+      if (navBtn && navLinks) {
+        navBtn.addEventListener('click', function () {
+          var open = navLinks.classList.toggle('open');
+          navBtn.setAttribute('aria-expanded', String(open));
+        });
+        navLinks.querySelectorAll('a').forEach(function (a) {
+          a.addEventListener('click', function () {
+            navLinks.classList.remove('open');
+            navBtn.setAttribute('aria-expanded', 'false');
+          });
+        });
+      }
+
+      // ── Scroll fade-in ──────────────────────────────────────────
+      var fadeEls = document.querySelectorAll('.fade-up');
+      if (typeof IntersectionObserver !== 'undefined') {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+          });
+        }, { threshold: 0.15 });
+        fadeEls.forEach(function (el) { io.observe(el); });
+      } else {
+        fadeEls.forEach(function (el) { el.classList.add('visible'); });
+      }
+
+    });
+  </script>
+</body>
+</html>
